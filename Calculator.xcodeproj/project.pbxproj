@@ -97,12 +97,9 @@
 		4D0431C81E8DADA10094C348 /* Calculator */ = {
 			isa = PBXGroup;
 			children = (
-				4D0431C91E8DADA10094C348 /* AppDelegate.swift */,
+				4D0431F71E8DAF330094C348 /* Supporting files */,
 				4D0431CB1E8DADA10094C348 /* ViewController.swift */,
 				4D0431CD1E8DADA10094C348 /* Main.storyboard */,
-				4D0431D01E8DADA10094C348 /* Assets.xcassets */,
-				4D0431D21E8DADA10094C348 /* LaunchScreen.storyboard */,
-				4D0431D51E8DADA10094C348 /* Info.plist */,
 			);
 			path = Calculator;
 			sourceTree = "<group>";
@@ -123,6 +120,17 @@
 				4D0431EB1E8DADA10094C348 /* Info.plist */,
 			);
 			path = CalculatorUITests;
+			sourceTree = "<group>";
+		};
+		4D0431F71E8DAF330094C348 /* Supporting files */ = {
+			isa = PBXGroup;
+			children = (
+				4D0431C91E8DADA10094C348 /* AppDelegate.swift */,
+				4D0431D01E8DADA10094C348 /* Assets.xcassets */,
+				4D0431D21E8DADA10094C348 /* LaunchScreen.storyboard */,
+				4D0431D51E8DADA10094C348 /* Info.plist */,
+			);
+			name = "Supporting files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -193,6 +201,7 @@
 				TargetAttributes = {
 					4D0431C51E8DADA10094C348 = {
 						CreatedOnToolsVersion = 8.3;
+						DevelopmentTeam = Q58QD63658;
 						ProvisioningStyle = Automatic;
 					};
 					4D0431D91E8DADA10094C348 = {
@@ -414,6 +423,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = Q58QD63658;
 				INFOPLIST_FILE = Calculator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ThoughtWorks.Calculator;
@@ -426,6 +436,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = Q58QD63658;
 				INFOPLIST_FILE = Calculator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ThoughtWorks.Calculator;
