@@ -11,8 +11,8 @@ import Foundation
 struct CalculatorBrain{
     
     private var accumulator: Double?
-    private var description: String?
-    private var isPartialResult: Bool? 
+    private var description: String = ""
+    private var isPartialResult: Bool = true
     
     private enum Operation {
         case constant(Double)
@@ -54,8 +54,25 @@ struct CalculatorBrain{
                 }
             case .equals:
                 performPendingBinaryOperation()
+                isPartialResult = false
             }
         }
+    }
+    
+    mutating func describeCalculation(_ input: String) -> String {
+        description = description + input
+        if isPartialResult == true
+        {
+            //description = description + "..."
+            return description + "..."
+            
+        }
+        else{
+            return description
+            
+        }
+        //return description
+        
     }
     
     
@@ -80,6 +97,7 @@ struct CalculatorBrain{
     
     mutating func setOperand(_ operand: Double) {
         accumulator = operand
+        description += String(operand)
     }
     
     var result: Double? {
