@@ -59,20 +59,21 @@ struct CalculatorBrain{
         }
     }
     
+    mutating func performClear(){
+        description = "0"
+        accumulator = 0
+    }
+    
     mutating func describeCalculation(_ input: String) -> String {
         description = description + input
         if isPartialResult == true
         {
-            //description = description + "..."
             return description + "..."
             
         }
         else{
             return description
-            
         }
-        //return description
-        
     }
     
     

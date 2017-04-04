@@ -13,6 +13,12 @@ class ViewController: UIViewController {
     @IBOutlet weak var display: UILabel!
     @IBOutlet weak var descriptionDisplay: UILabel!
     
+    @IBAction func clear(_ sender: UIButton) {
+        brain.performClear()
+        display!.text = "0"
+        descriptionDisplay.text = "0"
+    }
+    
     var userIsInTheMiddleOfTyping = false
     
     private var brain = CalculatorBrain()
@@ -46,7 +52,6 @@ class ViewController: UIViewController {
     
     @IBAction func performOperation(_ sender: UIButton) {
         if userIsInTheMiddleOfTyping {
-//            descriptionDisplay!.text = brain.describeCalculation(display.text!)
             brain.setOperand(displayValue)
             userIsInTheMiddleOfTyping = false
         }
@@ -54,7 +59,7 @@ class ViewController: UIViewController {
         if let mathematicalSymbol = sender.currentTitle {
             brain.performOperation(mathematicalSymbol)
             descriptionDisplay!.text = brain.describeCalculation(mathematicalSymbol)
-                }
+        }
         
         
         if let result = brain.result{
