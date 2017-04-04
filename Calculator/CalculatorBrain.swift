@@ -43,14 +43,17 @@ struct CalculatorBrain{
             switch operation {
             case .constant(let value):
                 accumulator = value
+                isPartialResult = true
             case .unaryOperation(let function):
                 if accumulator != nil{
                     accumulator = function(accumulator!)
+                    isPartialResult = true
                 }
             case .binaryOperation(let function):
                 if accumulator != nil {
                     pendingBinaryOperation = PendingBinaryOperation(function: function, firstOperand: accumulator!)
                     accumulator = nil
+                    isPartialResult = true
                 }
             case .equals:
                 performPendingBinaryOperation()
@@ -60,19 +63,21 @@ struct CalculatorBrain{
     }
     
     mutating func performClear(){
-        description = "0"
+        description = ""
         accumulator = 0
     }
     
     mutating func describeCalculation(_ input: String) -> String {
-        description = description + input
-        if isPartialResult == true
+        if input == "√" {
+            return input + "(" + description + ")"
+        }
+        else if isPartialResult == true
         {
+            description = description + input
             return description + "..."
-            
         }
         else{
-            return description
+            return description + "="
         }
     }
     
