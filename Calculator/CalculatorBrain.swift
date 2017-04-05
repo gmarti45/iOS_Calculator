@@ -15,6 +15,12 @@ struct CalculatorBrain{
     private var description: String = ""
     private var isPartialResult: Bool = true
     
+//    func setOperand(variableName: String){
+//        
+//    }
+//    
+//    var variableValues: Dictionary<String, Double>
+    
     mutating func setOperand(_ operand: Double) {
         accumulator = operand
         internalProgram.append(operand as AnyObject)

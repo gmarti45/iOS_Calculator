@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     @IBAction func clear(_ sender: UIButton) {
         brain.performClear()
         display!.text = "0"
-        descriptionDisplay.text = "0"
+        descriptionDisplay.text = " "
     }
     
     var userIsInTheMiddleOfTyping = false
