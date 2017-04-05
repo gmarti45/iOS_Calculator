@@ -61,6 +61,7 @@ struct CalculatorBrain{
                 performPendingBinaryOperation()
                 if accumulator != nil {
                     pendingBinaryOperation = PendingBinaryOperation(function: function, firstOperand: accumulator!)
+                    print("\(String(describing: accumulator))")
                     accumulator = nil
                     isPartialResult = true
                 }
