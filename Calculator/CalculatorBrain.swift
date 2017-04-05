@@ -11,8 +11,15 @@ import Foundation
 struct CalculatorBrain{
     
     private var accumulator: Double?
+    private var internalProgram = [AnyObject]()
     private var description: String = ""
     private var isPartialResult: Bool = true
+    
+    mutating func setOperand(_ operand: Double) {
+        accumulator = operand
+        internalProgram.append(operand as AnyObject)
+        description += String(operand)
+    }
     
     private enum Operation {
         case constant(Double)
@@ -39,6 +46,7 @@ struct CalculatorBrain{
     ]
     
     mutating func performOperation(_ symbol: String){
+        internalProgram.append(symbol as AnyObject)
         if let operation  = operations[symbol] {
             switch operation {
             case .constant(let value):
@@ -50,8 +58,10 @@ struct CalculatorBrain{
                     isPartialResult = true
                 }
             case .binaryOperation(let function):
+                performPendingBinaryOperation()
                 if accumulator != nil {
                     pendingBinaryOperation = PendingBinaryOperation(function: function, firstOperand: accumulator!)
+                    print("\(String(describing: accumulator))")
                     accumulator = nil
                     isPartialResult = true
                 }
@@ -63,8 +73,10 @@ struct CalculatorBrain{
     }
     
     mutating func performClear(){
+        pendingBinaryOperation = nil
         description = ""
-        accumulator = 0
+        accumulator = 0.0
+        internalProgram.removeAll()
     }
     
     mutating func describeCalculation(_ input: String) -> String {
@@ -100,11 +112,25 @@ struct CalculatorBrain{
         }
     }
     
-    
-    mutating func setOperand(_ operand: Double) {
-        accumulator = operand
-        description += String(operand)
+    typealias PropertyList = AnyObject
+    var program: PropertyList{
+        get{
+            return internalProgram as CalculatorBrain.PropertyList
+        }
+        set{
+            performClear()
+            if let arrayOfOps = newValue as? [AnyObject]{
+                for op in arrayOfOps{
+                    if let operand = op as? Double{
+                        setOperand(operand)
+                    } else if let operation = op as? String {
+                        performOperation(operation)
+                    }
+                }
+            }
+        }
     }
+    
     
     var result: Double? {
         get{

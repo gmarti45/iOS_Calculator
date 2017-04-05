@@ -13,6 +13,20 @@ class ViewController: UIViewController {
     @IBOutlet weak var display: UILabel!
     @IBOutlet weak var descriptionDisplay: UILabel!
     
+    var savedProgram: CalculatorBrain.PropertyList?
+    
+    @IBAction func save() {
+        savedProgram = brain.program
+    }
+    
+    @IBAction func restore() {
+        if savedProgram != nil{
+            brain.program = savedProgram!
+            displayValue = brain.result!
+        }
+    }
+    
+    
     @IBAction func clear(_ sender: UIButton) {
         brain.performClear()
         display!.text = "0"
