@@ -14,12 +14,14 @@ struct CalculatorBrain{
     private var internalProgram = [AnyObject]()
     private var description: String = ""
     private var isPartialResult: Bool = true
+    var variableValues: Dictionary<String, Double>=[:]
     
-//    func setOperand(variableName: String){
-//        
-//    }
-//    
-//    var variableValues: Dictionary<String, Double>
+    mutating func setOperand(variableName: String){
+        result = variableValues[variableName]
+        description += variableName
+        internalProgram.append(variableName as AnyObject)
+    }
+    
     
     mutating func setOperand(_ operand: Double) {
         accumulator = operand
@@ -67,7 +69,6 @@ struct CalculatorBrain{
                 performPendingBinaryOperation()
                 if accumulator != nil {
                     pendingBinaryOperation = PendingBinaryOperation(function: function, firstOperand: accumulator!)
-                    print("\(String(describing: accumulator))")
                     accumulator = nil
                     isPartialResult = true
                 }
@@ -129,8 +130,12 @@ struct CalculatorBrain{
                 for op in arrayOfOps{
                     if let operand = op as? Double{
                         setOperand(operand)
-                    } else if let operation = op as? String {
-                        performOperation(operation)
+                    } else if let variableName = op as? String {
+                        if variableValues[variableName] != nil{
+                           setOperand(variableName: variableName)
+                        }else if let operation = op as? String{
+                          performOperation(operation)
+                        }
                     }
                 }
             }
@@ -141,6 +146,14 @@ struct CalculatorBrain{
     var result: Double? {
         get{
             return accumulator
+        }
+        set{
+            if newValue != nil{
+                accumulator = newValue!
+            }
+            else{
+                accumulator = 0.0
+            }
         }
     }
 

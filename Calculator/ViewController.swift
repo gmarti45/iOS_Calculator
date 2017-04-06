@@ -82,6 +82,21 @@ class ViewController: UIViewController {
         
     }
     
+    //->M
+    @IBAction func setVariable(_ sender: UIButton) {
+        brain.variableValues["M"] = displayValue
+        brain.program = brain.program
+        displayValue = brain.result!
+
+    }
+   
+    //M
+    @IBAction func getVariable(_ sender: UIButton)  {
+        brain.setOperand(variableName: "M")
+        displayValue = brain.result!
+    }
+    
+    
     //    override func viewDidLoad() {
     //        super.viewDidLoad()
     //        // Do any additional setup after loading the view, typically from a nib.
