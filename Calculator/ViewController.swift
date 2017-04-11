@@ -26,6 +26,9 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func Undo(_ sender: UIButton) {
+        
+    }
     
     @IBAction func clear(_ sender: UIButton) {
         brain.performClear()

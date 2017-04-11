@@ -15,18 +15,19 @@ struct CalculatorBrain{
     private var description: String = ""
     private var isPartialResult: Bool = true
     var variableValues: Dictionary<String, Double>=[:]
+    var descriptionArray = [String]()
     
     mutating func setOperand(variableName: String){
         result = variableValues[variableName]
-        description += variableName
+        descriptionArray.append(variableName)
         internalProgram.append(variableName as AnyObject)
     }
     
     
     mutating func setOperand(_ operand: Double) {
         accumulator = operand
+        descriptionArray.append(String(operand))
         internalProgram.append(operand as AnyObject)
-        description += String(operand)
     }
     
     private enum Operation {
@@ -63,7 +64,6 @@ struct CalculatorBrain{
             case .unaryOperation(let function):
                 if accumulator != nil{
                     accumulator = function(accumulator!)
-                    isPartialResult = true
                 }
             case .binaryOperation(let function):
                 performPendingBinaryOperation()
@@ -82,22 +82,93 @@ struct CalculatorBrain{
     mutating func performClear(){
         pendingBinaryOperation = nil
         description = ""
+        descriptionArray.removeAll()
         accumulator = 0.0
         internalProgram.removeAll()
+        variableValues.removeAll()
     }
     
     mutating func describeCalculation(_ input: String) -> String {
-        if input == "√" {
-            return input + "(" + description + ")"
+        if input == "√" && isPartialResult == false{
+            loopThroughDescriptionArray()
+            if description.contains("M")
+            {
+                description = input + "(" + description + ")"
+            }
+            else
+            {
+                description = input + "(" + description + ")="
+            }
+            
+            return description
         }
-        else if isPartialResult == true
-        {
+        else if input == "√" && isPartialResult == true{
+            description = ""
+            for index in 0..<descriptionArray.count-1
+            {
+                description += descriptionArray[index]
+            }
+            description =  description + input + "(" + descriptionArray[descriptionArray.count-1] + ")"
+            return description
+        }
+        else if descriptionArray.contains("M") && input != "＝"{
+            descriptionArray.append(input)
             description = description + input
             return description + "..."
         }
-        else{
+        else if descriptionArray.count == 2 && descriptionArray[1] == "x" && input == "π"
+        {
+            let number = Double(descriptionArray[0])
+            accumulator = number! + Double.pi
             return description + "="
         }
+        else if descriptionArray.count == 2 && descriptionArray[1] == "+" {
+            let number = Double(descriptionArray[0])
+            accumulator = number! + number!
+            description = "\(number!)" + "+" + "\(number!)"
+            return description + "="
+        }
+            
+        else if description.contains("=") && description.contains("√") && !["+", "-", "x", "÷"].contains(descriptionArray[descriptionArray.count-2]) && !description.contains("M"){
+            descriptionArray = [descriptionArray[descriptionArray.count-1]]
+            descriptionArray.append(input)
+            loopThroughDescriptionArray()
+            return description + "..."
+        }
+        else if isPartialResult == true
+        {
+            descriptionArray.append(input)
+            loopThroughDescriptionArray()
+            return description + "..."
+        }
+            
+        else{
+            if !description.contains("(")
+            {
+                loopThroughDescriptionArray()
+            }
+            if !description.contains("M")
+            {
+                description = description + "="
+            }
+            if description.contains("M") && description.contains("(")
+            {
+                description = description + descriptionArray[descriptionArray.count-1]
+            }
+            return description
+        }
+    }
+    
+    mutating func loopThroughDescriptionArray(){
+        description = ""
+        for index in descriptionArray
+        {
+            description += index
+        }
+    }
+    
+    mutating func undo(){
+        
     }
     
     
@@ -125,16 +196,19 @@ struct CalculatorBrain{
             return internalProgram as CalculatorBrain.PropertyList
         }
         set{
-            performClear()
+            pendingBinaryOperation = nil
+            accumulator = 0.0
+            internalProgram.removeAll()
+            
             if let arrayOfOps = newValue as? [AnyObject]{
                 for op in arrayOfOps{
                     if let operand = op as? Double{
                         setOperand(operand)
                     } else if let variableName = op as? String {
                         if variableValues[variableName] != nil{
-                           setOperand(variableName: variableName)
+                            setOperand(variableName: variableName)
                         }else if let operation = op as? String{
-                          performOperation(operation)
+                            performOperation(operation)
                         }
                     }
                 }
@@ -156,5 +230,5 @@ struct CalculatorBrain{
             }
         }
     }
-
+    
 }
