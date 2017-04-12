@@ -27,7 +27,18 @@ class ViewController: UIViewController {
     }
     
     @IBAction func Undo(_ sender: UIButton) {
-        
+        if userIsInTheMiddleOfTyping && !display.text!.isEmpty {
+            display.text! = display.text!.substring(to: display.text!.index(before: display.text!.endIndex))
+            if display!.text!.isEmpty
+            {
+                display!.text = " "
+            }
+        }
+        else if !display.text!.isEmpty{
+            brain.undo()
+            brain.program = brain.program
+            descriptionDisplay.text! = brain.undoDescription()
+        }
     }
     
     @IBAction func clear(_ sender: UIButton) {
@@ -59,6 +70,10 @@ class ViewController: UIViewController {
     
     var displayValue: Double{
         get{
+            if display!.text!.contains(" ")
+            {
+                display!.text! = String(display!.text!.characters.dropFirst())
+            }
             return Double(display.text!)!
         }
         set{

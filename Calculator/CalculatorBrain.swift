@@ -16,6 +16,7 @@ struct CalculatorBrain{
     private var isPartialResult: Bool = true
     var variableValues: Dictionary<String, Double>=[:]
     var descriptionArray = [String]()
+    private var isUndoActive: Bool = false
     
     mutating func setOperand(variableName: String){
         result = variableValues[variableName]
@@ -111,6 +112,31 @@ struct CalculatorBrain{
             description =  description + input + "(" + descriptionArray[descriptionArray.count-1] + ")"
             return description
         }
+            
+        else if isUndoActive
+        {
+            var middleOfDescriptionArray = 0
+            if descriptionArray.count%2 == 0 || descriptionArray.count == 3
+            {
+                middleOfDescriptionArray = descriptionArray.count/2
+            }
+            else{
+                middleOfDescriptionArray = descriptionArray.count/2 + 1
+            }
+            let endOfDescriptionArray = descriptionArray.count
+            let numberOfElementsToDelete = endOfDescriptionArray - middleOfDescriptionArray
+            var i = 1
+            while i <= numberOfElementsToDelete
+            {
+                descriptionArray.remove(at: descriptionArray.count-1)
+                i += 1
+            }
+            descriptionArray.append(input)
+            loopThroughDescriptionArray()
+            isUndoActive = false
+            return description + "..."
+        }
+            
         else if descriptionArray.contains("M") && input != "＝"{
             descriptionArray.append(input)
             description = description + input
@@ -167,8 +193,20 @@ struct CalculatorBrain{
         }
     }
     
+    mutating func undoDescription() -> String
+    {
+        isUndoActive = true
+        description = description.substring(to: description.index(before: description.endIndex))
+        return description
+    }
+    
+    
+    
     mutating func undo(){
-        
+        if !internalProgram.isEmpty
+        {
+            internalProgram.removeLast()
+        }
     }
     
     
@@ -199,7 +237,6 @@ struct CalculatorBrain{
             pendingBinaryOperation = nil
             accumulator = 0.0
             internalProgram.removeAll()
-            
             if let arrayOfOps = newValue as? [AnyObject]{
                 for op in arrayOfOps{
                     if let operand = op as? Double{
