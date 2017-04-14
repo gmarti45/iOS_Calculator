@@ -16,7 +16,7 @@ struct CalculatorBrain{
     
     private var accumulator: Double?
     private var internalProgram = [AnyObject]()
-    private var description: String = ""
+    var description: String = ""
     private var isPartialResult: Bool = true
     var variableValues: Dictionary<String, Double>=[:]
     var descriptionArray = [String]()
@@ -117,6 +117,17 @@ struct CalculatorBrain{
             return description
         }
             
+        else if input == "sin" || input == "cos" || input == "tan"{
+            let number = descriptionArray[descriptionArray.count-1]
+            descriptionArray.remove(at: descriptionArray.count-1)
+            descriptionArray.append(input)
+            descriptionArray.append("(")
+            descriptionArray.append(number)
+            descriptionArray.append(")")
+            loopThroughDescriptionArray()
+            return description + "..."
+        }
+            
         else if isUndoActive
         {
             var middleOfDescriptionArray = 0
@@ -173,13 +184,13 @@ struct CalculatorBrain{
         }
             
         else{
-            if !description.contains("(")
+            if !description.contains("(") || descriptionArray.contains("sin") || descriptionArray.contains("cos") || descriptionArray.contains("tan")
             {
                 loopThroughDescriptionArray()
             }
             if !description.contains("M")
             {
-                description = description + "="
+                return description + "="
             }
             if description.contains("M") && description.contains("(")
             {

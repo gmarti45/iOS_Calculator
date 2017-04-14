@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class CalculatorViewController: UIViewController {
     
     @IBOutlet weak var display: UILabel!
     @IBOutlet weak var descriptionDisplay: UILabel!
@@ -112,26 +112,38 @@ class ViewController: UIViewController {
         brain.variableValues["M"] = displayValue
         brain.program = brain.program
         displayValue = brain.result!
-
+        
     }
-   
+    
     //M
     @IBAction func getVariable(_ sender: UIButton)  {
         brain.setOperand(variableName: "M")
         displayValue = brain.result!
     }
     
-    
-    //    override func viewDidLoad() {
-    //        super.viewDidLoad()
-    //        // Do any additional setup after loading the view, typically from a nib.
-    //    }
-    //
-    //    override func didReceiveMemoryWarning() {
-    //        super.didReceiveMemoryWarning()
-    //        // Dispose of any resources that can be recreated.
-    //    }
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        var destinationViewController = segue.destination
+        if let navigationController = destinationViewController as? UINavigationController {
+            destinationViewController = navigationController.visibleViewController ?? destinationViewController
+        }
+        
+        if  let graphViewController = destinationViewController as? CalculatorViewController{
+            graphViewController.navigationItem.title = brain.description
+        }
+    }
     
 }
+
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        // Do any additional setup after loading the view, typically from a nib.
+//    }
+//
+//    override func didReceiveMemoryWarning() {
+//        super.didReceiveMemoryWarning()
+//        // Dispose of any resources that can be recreated.
+//    }
+
+
+
 
