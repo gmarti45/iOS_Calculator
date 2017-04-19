@@ -13,8 +13,11 @@ import UIKit
 
 class GraphViewController: UIViewController {
     
+    var function: ((Double) -> Double)?
+    
     @IBOutlet weak var graph: GraphView!{
         didSet {
+            graph.function = function
             let zoomRecognizer = UIPinchGestureRecognizer(target: graph, action: #selector(GraphView.zoom(byReactingTo:)))
             graph.addGestureRecognizer(zoomRecognizer)
             let panRecognizer = UIPanGestureRecognizer (target: graph, action: #selector(GraphView.panning(byReactingTo:)))

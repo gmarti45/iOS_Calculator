@@ -17,7 +17,7 @@ struct CalculatorBrain{
     private var accumulator: Double?
     private var internalProgram = [AnyObject]()
     var description: String = ""
-    private var isPartialResult: Bool = true
+    var isPartialResult: Bool = true
     var variableValues: Dictionary<String, Double>=[:]
     var descriptionArray = [String]()
     private var isUndoActive: Bool = false

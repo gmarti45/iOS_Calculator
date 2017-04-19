@@ -127,22 +127,24 @@ class CalculatorViewController: UIViewController {
             destinationViewController = navigationController.visibleViewController ?? destinationViewController
         }
         
-        if  let graphViewController = destinationViewController as? CalculatorViewController{
+        if  let graphViewController = destinationViewController as? GraphViewController{
+            if brain.isPartialResult {
+                return
+            }
             graphViewController.navigationItem.title = brain.description
+            
+            graphViewController.function = {
+            (x: Double) -> Double in
+            self.brain.variableValues["M"] = x
+            self.brain.program = self.brain.program
+            return self.brain.result ?? 0
+        }
         }
     }
     
 }
 
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        // Do any additional setup after loading the view, typically from a nib.
-//    }
-//
-//    override func didReceiveMemoryWarning() {
-//        super.didReceiveMemoryWarning()
-//        // Dispose of any resources that can be recreated.
-//    }
+
 
 
 

@@ -11,6 +11,10 @@ import UIKit
 @IBDesignable
 class GraphView: UIView {
     
+    var function: ((Double) -> Double)? {
+        didSet { setNeedsDisplay() }
+    }
+    
     @IBInspectable
     var scale: CGFloat = 0.9 { didSet { setNeedsDisplay()}}
     
@@ -23,7 +27,55 @@ class GraphView: UIView {
     @IBInspectable
     var color: UIColor = UIColor.black { didSet { setNeedsDisplay()}}
     
+    
     private var axesDrawer = AxesDrawer()
+
+    
+    
+    
+    func modifyCoordinatePts (x: CGFloat, y: CGFloat)-> CGPoint
+    {
+        return CGPoint(x: origin.x + (x*scale), y: origin.y - (y*scale))
+    }
+    
+    func modifyCoordinates (x: Double, y: Double)-> CGPoint
+    {
+        return CGPoint(x: origin.x + (CGFloat(x)*scale), y: origin.y - (CGFloat(y)*scale))
+    }
+    
+    
+    private func pathForFunction() -> UIBezierPath
+    {
+        let path = UIBezierPath()
+        path.lineWidth = 2
+        var firstPoint = true
+        
+        if function != nil {
+            for x in 0...Int(bounds.size.width * scale) {
+                let pointX = CGFloat(x) / scale
+                
+                let xVal = Double((pointX - origin.x) / scale)
+                let yVal = function!(xVal)
+                
+                if !yVal.isZero && !yVal.isNormal {
+                    firstPoint = true
+                    continue
+                }
+                
+                let pointY = origin.y - CGFloat(yVal) * scale
+                
+                if firstPoint {
+                    path.move(to: CGPoint(x: pointX, y: pointY))
+                    firstPoint = false
+                } else {
+                    path.addLine(to: CGPoint(x: pointX, y: pointY))
+                    
+                }
+            }
+        }
+        return path
+    }
+    
     
     
     func zoom(byReactingTo pinchRecognizer: UIPinchGestureRecognizer)
@@ -36,6 +88,8 @@ class GraphView: UIView {
             break
         }
     }
+    
+    
     
     func panning(byReactingTo panRecognizer: UIPanGestureRecognizer)
     {
@@ -50,6 +104,8 @@ class GraphView: UIView {
         }
     }
     
+    
+    
     func moveOrigin(byReactingTo doubleTapRecognizer: UITapGestureRecognizer)
     {
         switch doubleTapRecognizer.state {
@@ -60,18 +116,23 @@ class GraphView: UIView {
         }
     }
     
-    private func pathForFunction() -> UIBezierPath
-    {
-        let path: UIBezierPath
-        path = UIBezierPath()
-        path.lineWidth = lineWidth
-        return path
-    }
-
+    
     override func draw(_ rect: CGRect) {
         color.set() //sets the fill and stroke color
-        pathForFunction().stroke()
         origin = origin ?? CGPoint(x: bounds.midX, y: bounds.midY)
         axesDrawer.drawAxes(in: rect, origin: origin, pointsPerUnit: scale)
+        pathForFunction().stroke()
+        
+//        let testPath: UIBezierPath
+//        testPath = UIBezierPath()
+//        testPath.lineWidth = lineWidth
+//        
+//        testPath.move(to: CGPoint(x: origin.x, y: origin.y))
+//        testPath.addLine(to: modifyCoordinatePts(x: 10, y: 10))
+//        testPath.close()
+//        testPath.stroke()
+//        testPath.fill()
+        
+        
     }
 }
